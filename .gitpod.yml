@@ -1,0 +1,4 @@
+image: gitpod/workspace-full
+tasks:
+- command: composer install && cp .env.example .env
+- command: php -S 0.0.0.0:3000 -t public
