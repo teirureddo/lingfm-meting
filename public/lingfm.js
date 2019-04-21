@@ -187,15 +187,24 @@ $(document).ready(function() {
         }
     });
 
-    //空格播放暂停
-    $(document).on("keypress",function(event){
-        if (event.keyCode == 32 && event.target.nodeName != "INPUT") {
-            if ($(".jp-pause").css("display") == "none") {
-                //如果暂停按钮不显示 未播放
-                $(".jp-play").click();
-            }else {
-                //如果暂停按钮显示 播放中
-                $(".jp-pause").click();
+    //快捷键控制
+    $(document).on("keyup",function(event){
+        if (event.target.nodeName != "INPUT") {
+            switch (event.keyCode) {
+                case 32:
+                    if ($(".jp-pause").css("display") == "none") {
+                    //如果暂停按钮不显示 未播放
+                        $(".jp-play").click();
+                    }else {
+                    //如果暂停按钮显示 播放中
+                        $(".jp-pause").click();
+                    }
+                    break;
+                case 39:
+                    player.jPlayer("pause");
+                    name.text("Loading...");
+                    playMusic(randomID());
+                    break;
             }
         }
     });
