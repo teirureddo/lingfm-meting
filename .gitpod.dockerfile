@@ -4,6 +4,8 @@ USER root
 
 RUN apt-get update \
  && apt-get -y install apache2 multitail postgresql postgresql-contrib mysql-server mysql-client \
+ && apt-get -y install php-cli php-bz2 php-bcmath php-gmp php-imap php-shmop php-soap php-xmlrpc php-xsl php-ldap \
+ && apt-get -y install php-amqp php-apcu php-imagick php-memcached php-mongodb php-oauth php-redis\
  && apt-get clean && rm -rf /var/cache/apt/* /var/lib/apt/lists/* /tmp/*
 
 RUN mkdir /var/run/mysqld
@@ -23,12 +25,13 @@ LogFormat "%h %l %u %t \"%r\" %>s %b" common\n\
 CustomLog /var/log/apache2/access.log common\n\
 ErrorLog /var/log/apache2/error.log\n\
 <Directory />\n\
-    AllowOverride All\n\
+    AllowOverride None\n\
     Require all denied\n\
 </Directory>\n\
 DirectoryIndex index.php index.html\n\
 DocumentRoot "${GITPOD_REPO_ROOT}/public"\n\
 <Directory "${GITPOD_REPO_ROOT}/public">\n\
+    AllowOverride All\n\
     Require all granted\n\
 </Directory>\n\
 IncludeOptional /etc/apache2/conf-enabled/*.conf' > /etc/apache2/apache2.conf
@@ -65,10 +68,15 @@ max_binlog_size     = 100M' > /etc/mysql/my.cnf
 USER gitpod
 ENV PATH="$PATH:/usr/lib/postgresql/10/bin"
 ENV PGDATA="/home/gitpod/pg/data"
-RUN mkdir -p ~/pg/data; mkdir -p ~/pg/scripts; mkdir -p ~/pg/logs; mkdir -p ~/pg/sockets; initdb -D pg/data/
-RUN echo '#!/bin/bash\npg_ctl -D ~/pg/data/ -l ~/pg/logs/pgsql.log -o "-k ~/pg/sockets" start' > ~/pg/scripts/pg_start.sh
-RUN echo '#!/bin/bash\npg_ctl -D ~/pg/data/ -l ~/pg/logs/pgsql.log -o "-k ~/pg/sockets" stop' > ~/pg/scripts/pg_stop.sh
+RUN mkdir -p ~/pg/data; mkdir -p ~/pg/scripts; mkdir -p ~/pg/log; mkdir -p ~/pg/sockets; initdb -D pg/data/
+RUN echo '#!/bin/bash\npg_ctl -D ~/pg/data/ -l ~/pg/log/pgsql.log -o "-k ~/pg/sockets" start' > ~/pg/scripts/pg_start.sh
+RUN echo '#!/bin/bash\npg_ctl -D ~/pg/data/ -l ~/pg/log/pgsql.log -o "-k ~/pg/sockets" stop' > ~/pg/scripts/pg_stop.sh
 RUN chmod +x ~/pg/scripts/*
 ENV PATH="$PATH:$HOME/pg/scripts"
+
+RUN ( mysqld --skip-grant-tables & ) \
+    && sleep 3 \
+    && ( mysql -uroot -e "USE mysql; UPDATE user SET authentication_string=PASSWORD(\"123456\") WHERE user='root'; UPDATE user SET plugin=\"mysql_native_password\" WHERE user='root'; FLUSH PRIVILEGES;" ) \
+    && mysqladmin -uroot -p123456 shutdown;
 
 USER root
