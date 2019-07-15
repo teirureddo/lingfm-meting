@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS `lingfm`;
+USE `lingfm`;
 CREATE TABLE IF NOT EXISTS `lingfm` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
