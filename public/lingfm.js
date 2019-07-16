@@ -107,7 +107,7 @@ $(document).ready(function() {
                 playMusic(randomID());
             }
         },
-        error: function() {    
+        error: function() {
             if (errorlimit < 4) {
                 errorlimit = errorlimit + 1;
                 playMusic(randomID());
@@ -115,7 +115,7 @@ $(document).ready(function() {
             else {
                 name.text("Error(2)");
                 errorlimit = 0;
-            }      
+            }
         },
         supplied:"oga",
         solution:"html",
@@ -178,10 +178,18 @@ $(document).ready(function() {
         }, 500);
     });
 
+    $(".sinput").focus(function() {
+        if ($(".sinput").val() == "Search...") {
+            $(".sinput").val("");
+        }
+    })
+
     //搜索图标
     sicon.click(function() {
         if ($("#search-box").css("display") == "none") {
             $("#search-box").css("display","block");
+            $("#sline-box").html("");
+            $(".sinput").val("Search...");
         }else {
             $("#search-box").css("display","none");
         }
