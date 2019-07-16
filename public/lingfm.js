@@ -73,7 +73,7 @@ $(document).ready(function() {
                         playMusic(randomID());
                     }
                     else {
-                        name.text("Error(1)");
+                        name.text("错误(code:1)");
                         errorlimit = 0;
                     }
                 }
@@ -113,7 +113,7 @@ $(document).ready(function() {
                 playMusic(randomID());
             }
             else {
-                name.text("Error(2)");
+                name.text("错误(code:2)");
                 errorlimit = 0;
             }
         },
@@ -142,7 +142,7 @@ $(document).ready(function() {
     //搜索
     function serach(searchString) {
         $("#sline-box").html("");
-        $("#sline-box").append("<div class=\"sline\">Serach...</div>");
+        $("#sline-box").append("<div class=\"sline\">在此输入要搜索的内容并按回车...</div>");
 
         $.ajax({
             url: "/api/search",
@@ -152,7 +152,7 @@ $(document).ready(function() {
             success: function (result) {
                 $("#sline-box").html("");
                 if (result.length == 0) {
-                    $("#sline-box").append("<div class=\"sline\">None...</div>");
+                    $("#sline-box").append("<div class=\"sline\">似乎没有任何结果呐...</div>");
                 }
                 else{
                     $(result).each(function () {
@@ -162,7 +162,7 @@ $(document).ready(function() {
             },
             error: function() {
                 $("#sline-box").html("");
-                $("#sline-box").append("<div class=\"sline\">Error...</div>");
+                $("#sline-box").append("<div class=\"sline\">错误(code:3)...</div>");
             }
         });
     }
@@ -179,7 +179,7 @@ $(document).ready(function() {
     });
 
     $(".sinput").focus(function() {
-        if ($(".sinput").val() == "Search...") {
+        if ($(".sinput").val() == "在此输入要搜索的内容并按回车...") {
             $(".sinput").val("");
         }
     })
@@ -189,7 +189,7 @@ $(document).ready(function() {
         if ($("#search-box").css("display") == "none") {
             $("#search-box").css("display","block");
             $("#sline-box").html("");
-            $(".sinput").val("Search...");
+            $(".sinput").val("在此输入要搜索的内容并按回车...");
         }else {
             $("#search-box").css("display","none");
         }
