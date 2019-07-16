@@ -150,7 +150,7 @@ $(document).ready(function() {
             success: function (result) {
                 $("#sline-box").html("");
                 if (result.length == 0) {
-                    $("#sline-box").append("<div class=\"sline\">似乎没有任何结果呐...</div>");
+                    $("#sline-box").append("<div class=\"sline\">似乎没有任何结果呐</div>");
                 }
                 else{
                     $(result).each(function () {
@@ -165,7 +165,7 @@ $(document).ready(function() {
         });
     }
 
-    //回车搜索
+    //搜索输入框
     $(".sinput").on("keypress",function(event){
         clearTimeout(stime);
         stime = setTimeout(function () {
@@ -174,20 +174,22 @@ $(document).ready(function() {
                 serach(sinputVal);
             }
         }, 500);
-    });
-
-    $(".sinput").focus(function() {
-        if ($(".sinput").val() == "在此输入要搜索的内容并按回车...") {
+    }).focus(function() {
+        if ($(".sinput").val() == "在此输入要搜索的内容并按回车") {
             $(".sinput").val("");
         }
-    })
+    }).blur(function() {
+        if ($(".sinput").val() == "") {
+            $(".sinput").val("在此输入要搜索的内容并按回车");
+        }
+    });
 
     //搜索图标
     sicon.click(function() {
         if ($("#search-box").css("display") == "none") {
             $("#search-box").css("display","block");
             $("#sline-box").html("");
-            $(".sinput").val("在此输入要搜索的内容并按回车...");
+            $(".sinput").val("在此输入要搜索的内容并按回车");
         }else {
             $("#search-box").css("display","none");
         }
