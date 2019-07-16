@@ -142,8 +142,6 @@ $(document).ready(function() {
     //搜索
     function serach(searchString) {
         $("#sline-box").html("");
-        $("#sline-box").append("<div class=\"sline\">在此输入要搜索的内容并按回车...</div>");
-
         $.ajax({
             url: "/api/search",
             data: { name:searchString },
@@ -162,7 +160,7 @@ $(document).ready(function() {
             },
             error: function() {
                 $("#sline-box").html("");
-                $("#sline-box").append("<div class=\"sline\">错误(code:3)...</div>");
+                $("#sline-box").append("<div class=\"sline\">错误(code:3)</div>");
             }
         });
     }
