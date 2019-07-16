@@ -29,6 +29,7 @@ class APIModel
     public static function search($name)
     {
         return DB::table('lingfm')
+                     ->select('id', 'name')
                      ->where('name', 'like', '%' . $name . '%')
                      ->orderBy('id', 'desc')
                      ->get();
