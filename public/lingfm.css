@@ -51,6 +51,7 @@ body {
     height: 110px;
   }
   #player-wrapper .left {
+    margin-left: 15px;
     margin-top: 20px;
     text-align: center;
   }
@@ -92,7 +93,7 @@ body {
   position: relative;
   width: 100%;
   max-width: 400px;
-  height: 50vh;
+  height: 48vh;
   margin: 10vh auto;
   overflow: auto;
   background-color: rgba(0,0,0,0.2);
