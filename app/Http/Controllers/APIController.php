@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\APIModel;
+use Metowolf\Meting;
 
 class APIController extends Controller
 {
@@ -12,46 +13,65 @@ class APIController extends Controller
     {
         $id = $request->input('id');
 
-        if(is_numeric($id))
+        if(ctype_digit($id) && ($id != 0))
         {
-            $results = APIModel::music($id);
+            $music = APIModel::music($id);
 
-            if($results)
+            switch($music->play)
             {
-                return response()->json([
-                    'id' => (string)$results->id,
-                    'name' => $results->name,
-                    'music' => $results->music,
-                    'image' => $results->image
-                ]);
+                case 1:
+                    $musicURL = APIModel::musicLocal($id);
+
+                    return response()->json([
+                    'id' => (string)$music->id,
+                    'name' => $music->name,
+                    'music' => $musicURL->localURL,
+                    'image' => $music->image
+                    ]);
+
+                case 2:
+                    $NeteaseID = APIModel::musicNetease($id);
+                    $neteaseAPI = new Meting('netease');
+                    $musicURL = $neteaseAPI->format(true)->url($NeteaseID->neteaseID);
+                    $musicURL = json_decode($musicURL);
+
+                    return response()->json([
+                        'id' => (string)$music->id,
+                        'name' => $music->name,
+                        'music' => $musicURL->url,
+                        'image' => $music->image
+                    ]);
             }
         }
 
-        $results = APIModel::musicRand();
+        $music = APIModel::musicRand();
 
-        return response()->json([
-            'id' => (string)$results->id,
-            'name' => $results->name,
-            'music' => $results->music,
-            'image' => $results->image
-        ]);
-    }
-
-/*
-    public function musicList(Request $request)
-    {
-        $row = $request->input('row');
-
-        if(is_numeric($row) && $row > 0 && $row < 11)
+        switch($music->play)
         {
-            $results = APIModel::musicList($row);
+            case 1:
+                $musicURL = APIModel::musicLocal($music->id);
 
-            return response()->json($results);
+                return response()->json([
+                    'id' => (string)$music->id,
+                    'name' => $music->name,
+                    'music' => $musicURL->localURL,
+                    'image' => $music->image
+                ]);
+
+            case 2:
+                $NeteaseID = APIModel::musicNetease($music->id);
+                $neteaseAPI = new Meting('netease');
+                $musicURL = $neteaseAPI->format(true)->url($NeteaseID->neteaseID);
+                $musicURL = json_decode($musicURL);
+
+                return response()->json([
+                    'id' => (string)$music->id,
+                    'name' => $music->name,
+                    'music' => $musicURL->url,
+                    'image' => $music->image
+                ]);
         }
-
-        return response()->json();
     }
-*/
 
     public function count()
     {
@@ -64,7 +84,7 @@ class APIController extends Controller
     {
         $name = $request->input('name');
         $namelen = strlen($name);
-        
+
         if($name && $namelen !=1)
         {
             $results = APIModel::search($name);

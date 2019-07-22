@@ -1,8 +1,8 @@
-# LingFM
+# LingFM × Meting
 
 一个简单的音乐电台
 
-## 安装 
+## 安装
 
 1. 创建数据库，导入 lingfm.sql
 2. 运行 `composer install --no-dev`
@@ -12,12 +12,22 @@
 
 ## 使用
 
-**没有后台，直接操作 MySQL 数据库吧，用 phpMyAdmin 或 Adminer，向表 `lingfm` 添加数据**  
+没有后台，直接操作 MySQL 数据库吧
 
-`id` 是序号，从1开始  
-`name` 是音乐名称  
-`music` 是音乐地址  
-`image` 是图片地址  
+**playlist表**
+ - `id` 是音乐序号, 从1开始
+ - `name` 是音乐名称
+ - `image` 是图片地址
+ - `play` 是播放类型, 有两种值:<br>
+(1)从musicLocal表获取音乐地址, (2)根据neteaseID获取音乐地址
+
+**musicLocal表**
+ - `id` 是音乐序号, 对应playlist表的id
+ - `localURL` 是音乐地址
+
+**musicNetease表**
+ - `id` 是音乐序号, 对应playlist表的id
+ - `neteaseID` 是Netease的音乐ID
 
 ----
 
